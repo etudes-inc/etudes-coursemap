@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/coursemap/trunk/coursemap-tool/tool/src/views/edit.xml $
+ * $Id: edit.xml 9692 2014-12-26 21:57:29Z ggolden $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2010, 2011, 2014 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface>
+
+	<title>
+		<message selector="list-title" />
+	</title>
+
+	<header>
+		<message selector="list-header">
+			<model type="icon" icon="/icons/arrow_branch.png" />
+		</message>
+	</header>
+
+	<container>
+
+		<section treatment="indented">
+			<container>
+				<text>
+					<message selector="mastery-title">
+						<model type="icon" icon="/icons/gear.png" />
+						<model type="component">
+							<container>
+								<countEdit model="map.masteryPercent" cols="3">
+									<minValue>
+										<model type="constant" value="0" />
+									</minValue>
+									<maxValue>
+										<model type="constant" value="100" />
+									</maxValue>
+								</countEdit>								
+							</container>
+						</model>
+					</message>
+				</text>
+
+				<selection>
+					<selectionChoices>
+						<selectionChoice>
+							<displayMessage>
+								<message selector="clearBlockOnClose" />
+							</displayMessage>
+							<valueMessage>
+								<message template="true" />
+							</valueMessage>
+						</selectionChoice>
+					</selectionChoices>
+					<model ref="map.clearBlockOnClose" />
+				</selection>
+
+			</container>
+		</section>
+
+		<section treatment="evaluation">
+			<container>
+				<instructions selector="key-unaccepted" >
+					<message selector="key-unaccepted">
+						<model type="component">
+							<container>
+								<navigation title="accept-all" destination="ACCEPT" style="BUTTON" accessKey="accept-all-key" submit="TRUE">
+									<icon icon="/icons/flag_blue.png" style="LEFT" />
+								</navigation>
+							</container>
+						</model>
+<!--						<model type="component">-->
+<!--							<container>-->
+<!--								<navigation title="reposition" destination="SORT_CHANGED" style="BUTTON" accessKey="reposition-key" submit="TRUE">-->
+<!--									<icon icon="/icons/save.png" style="LEFT" />-->
+<!--								</navigation>-->
+<!--							</container>-->
+<!--						</model>-->
+					</message>
+				</instructions>
+			</container>
+			<included>
+				<decision model="map.fullyPositioned" reversed="TRUE" />
+			</included>
+		</section>
+
+		<!-- repeat the nav up top w/o access keys -->
+		<navigationBar>
+			<container>
+				<divider />
+				<navigation title="save" description="save-description" style="BUTTON" submit="TRUE">
+					<destination template="SAVE" />
+					<icon icon="/icons/save.png" style="LEFT" />
+				</navigation>
+			</container>
+		</navigationBar>
+
+		<entityList style="FLAT" reorder="DND" orderModel="map.newOrder" dndColHide="dropdown">
+			<iterator name="item">
+				<model ref="items" indexRef="mapId" />
+			</iterator>
+
+			<colorize color="#E8EEF6">
+				<decision model="item.positioned" reversed="TRUE" />
+			</colorize>
+
+			<emptyTitle>
+				<message selector="list-empty" />
+			</emptyTitle>
+
+			<columns>
+
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" disabled="TRUE" description="changed-item">
+							<icon icon="/icons/flag_blue.png" style="LEFT" />
+							<included>
+								<decision model="item.positioned" reversed="TRUE" />
+							</included>
+						</navigation>
+					</navigations>
+					<included>
+						<decision model="map.fullyPositioned" reversed="TRUE" />
+					</included>
+				</modelColumn>
+
+				<column pixels="16" centered="TRUE">
+					<title>
+						<message selector="list-header-block" />
+					</title>
+					<container>
+						<selection>
+							<selectionChoices>
+								<selectionChoice>
+									<displayMessage>
+										<message selector="block-display" />
+									</displayMessage>
+									<valueMessage>
+										<message template="true" />
+									</valueMessage>
+								</selectionChoice>
+							</selectionChoices>
+							<model ref="item.blocker" />
+						</selection>
+					</container>
+					<entityIncluded>
+						<compareDecision model="item.type" constant="header" reversed="TRUE" />
+						<hasValueDecision model="item.countRequired" />
+					</entityIncluded>
+				</column>
+
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-invalid" disabled="TRUE">
+							<icon icon="/icons/warning.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="invalid" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-deny-access" disabled="TRUE">
+							<icon icon="/icons/forbidden.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="unpublished" />
+								<compareDecision model="item.type.appCode" constant="1" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-unpublished" disabled="TRUE">
+							<icon icon="/icons/forbidden.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="unpublished" />
+								<compareDecision model="item.type.appCode" constant="1" reversed="TRUE" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-invisible" disabled="TRUE">
+							<icon icon="/icons/invisible.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="published_hidden"/>
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-published" disabled="TRUE">
+							<icon icon="/icons/publish.png" style="LEFT" />
+							<included>
+								<orDecision>
+									<compareDecision model="item.accessStatus" constant="published_not_yet_open"/>
+									<compareDecision model="item.accessStatus" constant="published"/>
+									<compareDecision model="item.accessStatus" constant="published_closed_access"/>
+									<compareDecision model="item.accessStatus" constant="published_closed"/>
+								</orDecision>
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-type-test" disabled="TRUE">
+							<icon icon="/icons/test_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="test" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-survey" disabled="TRUE">
+							<icon icon="/icons/survey_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="survey" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-fce" disabled="TRUE">
+							<icon icon="/icons/fce_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="fce" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-offline" disabled="TRUE">
+							<icon icon="/icons/offline_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="offline" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-assignment" disabled="TRUE">
+							<icon icon="/icons/assignment_type.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="assignment" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-forum" disabled="TRUE">
+							<icon icon="/icons/jforum.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="forum" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-topic" disabled="TRUE">
+							<icon icon="/icons/jforum.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="topic" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-category" disabled="TRUE">
+							<icon icon="/icons/jforum.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="category" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-syllabus" disabled="TRUE">
+							<icon icon="/icons/script.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="syllabus" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-module" disabled="TRUE">
+							<icon icon="/icons/module.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="module" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-type-header" disabled="TRUE">
+							<icon icon="/icons/bullet_black.png" style="LEFT" />
+							<included>
+								<compareDecision model="item.type" constant="header" />
+							</included>
+						</navigation>
+					</navigations>
+				</modelColumn>
+
+				<column>
+					<title>
+						<message selector="list-header-title" />
+					</title>
+					<container>
+						<navigation style="LINK" submit="TRUE" wrap="TRUE">
+							<included>
+								<compareDecision model="item.type" reversed="TRUE" constant="header" />
+							</included>
+							<title>
+								<message selector="list-title">
+									<model ref="item.title" type="text" />
+								</message>
+							</title>
+							<destination template="SAVE:/!portal!/{0}{1}">
+								<model ref="item.toolId" />
+								<model ref="item.editLink" />
+							</destination>
+							<disabled>
+								<hasValueDecision model="item.editLink" reversed="TRUE" />
+							</disabled>
+						</navigation>
+						<textEdit cols="40">
+							<included>
+								<compareDecision model="item.type" constant="header" />
+							</included>
+							<model ref="item.title" type="text" />
+						</textEdit>
+					</container>
+				</column>
+
+				<!-- availability icon -->
+				<modelColumn pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="item-not-yet-open" disabled="TRUE">
+							<icon icon="/icons/cancel.gif" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="published_not_yet_open" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="item-closed" disabled="TRUE">
+							<icon icon="/icons/cancel.gif" style="LEFT" />
+							<included>
+								<compareDecision model="item.accessStatus" constant="published_closed" />
+							</included>
+						</navigation>
+					</navigations>
+					<entityIncluded>
+						<compareDecision model="item.type" constant="header" reversed="TRUE" />
+					</entityIncluded>
+				</modelColumn>
+
+				<column em="8">
+					<title>
+						<message selector="list-header-open" />
+					</title>
+					<container>
+						<dateEdit>
+							<model ref="item.open" type="date" />
+							<readOnly>
+								<decision model="item.datesReadOnly" />
+							</readOnly>
+						</dateEdit>
+					</container>
+					<entityIncluded>
+						<decision model="item.type.supportsDates" />
+					</entityIncluded>
+				</column>
+
+				<column em="8">
+					<title>
+						<message selector="list-header-due" />
+					</title>
+					<container>
+						<dateEdit late="TRUE">
+							<model ref="item.due" type="date" />
+							<readOnly>
+								<decision model="item.datesReadOnly" />
+							</readOnly>
+						</dateEdit>
+					</container>
+					<entityIncluded>
+						<decision model="item.type.supportsDates" />
+					</entityIncluded>
+				</column>
+
+				<column em="8">
+					<title>
+						<message selector="list-header-close" />
+					</title>
+					<container>
+						<dateEdit late="TRUE">
+							<model ref="item.close" type="date" />
+							<readOnly>
+								<decision model="item.datesReadOnly" />
+							</readOnly>
+						</dateEdit>
+					</container>
+					<entityIncluded>
+						<decision model="item.type.supportsDates" />
+						<decision model="item.type.supportsCloseDate" />
+					</entityIncluded>
+				</column>
+
+				<column centered="TRUE" pixels="16" wrap="FALSE">
+					<navigations>
+						<navigation style="LINK" submit="TRUE" description="control-add">
+							<icon icon="/icons/add.png" style="LEFT" />
+							<destination template="ADD_HEADER:{0}">
+								<model ref="item.mapId" />
+							</destination>
+							<included>
+								<compareDecision model="item.type" constant="header" reversed="TRUE" />
+							</included>
+						</navigation>
+						<navigation style="LINK" submit="TRUE" description="control-delete">
+							<icon icon="/icons/delete.png" style="LEFT" />
+							<destination template="DELETE_HEADER:{0}">
+								<model ref="item.mapId" />
+							</destination>
+							<included>
+								<compareDecision model="item.type" constant="header" />
+							</included>
+						</navigation>
+					</navigations>
+				</column>
+
+				<column pixels="16" centered="TRUE">
+					<navigations>
+						<navigation style="LINK" disabled="TRUE" description="reorder">
+							<icon icon="!/ambrosia_library/icons/reorder.png" style="LEFT" />
+						</navigation>
+					</navigations>
+				</column>
+
+				<column id="dropdown" pixels="16" centered="TRUE">
+					<container>
+						<selection orientation="DROPDOWN" height="1">
+							<model ref="item.mapPositioning" />
+							<selectionModel name="pos" model="item.mapPositions">
+								<valueMessage>
+									<message model="pos.id" />
+								</valueMessage>
+								<displayMessage>
+									<message model="pos.position" />
+								</displayMessage>
+							</selectionModel>
+							<destination template="REORDER" />
+						</selection>
+					</container>
+				</column>
+
+			</columns>
+		</entityList>
+
+		<!-- navigations -->
+		<navigationBar id="nav">
+			<container>
+				<divider />
+				<navigation title="save" accessKey="save-access" description="save-description" style="BUTTON" submit="TRUE">
+					<destination template="SAVE" />
+					<icon icon="/icons/save.png" style="LEFT" />
+				</navigation>
+			</container>
+		</navigationBar>
+
+	</container>
+</interface>

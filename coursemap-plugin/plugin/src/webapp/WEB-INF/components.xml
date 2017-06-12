@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/coursemap/trunk/coursemap-plugin/plugin/src/webapp/WEB-INF/components.xml $
+ * $Id: components.xml 7621 2014-03-12 20:54:41Z ggolden $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2010, 2011, 2012, 2014 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<beans>
+
+	<bean id="org.etudes.coursemap.plugin.MnemeItemProvider"
+			class="org.etudes.coursemap.plugin.MnemeItemProvider"
+			init-method="init"
+			destroy-method="destroy"
+			singleton="true">
+
+		<property name="assessmentService"><ref bean="org.etudes.mneme.api.AssessmentService"/></property>
+		<property name="courseMapService"><ref bean="org.etudes.coursemap.api.CourseMapService"/></property>
+		<property name="submissionService"><ref bean="org.etudes.mneme.api.SubmissionService"/></property>
+		<property name="sessionManager"><ref bean="org.sakaiproject.tool.api.SessionManager"/></property>
+		<property name="siteService"><ref bean="org.sakaiproject.site.api.SiteService"/></property>
+	</bean>
+
+	<bean id="org.etudes.coursemap.plugin.MeleteItemProvider"
+			class="org.etudes.coursemap.plugin.MeleteItemProvider"
+			init-method="init"
+			destroy-method="destroy"
+			singleton="true">
+
+		<property name="courseMapService"><ref bean="org.etudes.coursemap.api.CourseMapService"/></property>
+		<property name="siteService"><ref bean="org.sakaiproject.site.api.SiteService"/></property>
+		<property name="moduleService"><ref bean="org.etudes.api.app.melete.ModuleService"/></property>
+	</bean>
+
+	<bean id="org.etudes.coursemap.plugin.JForumItemProvider"
+			class="org.etudes.coursemap.plugin.JForumItemProvider"
+			init-method="init"
+			destroy-method="destroy"
+			singleton="true">
+
+		<property name="courseMapService"><ref bean="org.etudes.coursemap.api.CourseMapService"/></property>
+		<property name="siteService"><ref bean="org.sakaiproject.site.api.SiteService"/></property>
+		<property name="sessionManager"><ref bean="org.sakaiproject.tool.api.SessionManager"/></property>
+		<property name="jforumService"><ref bean="org.etudes.api.app.jforum.JForumService"/></property>
+		<property name="jforumSecurityService"><ref bean="org.etudes.api.app.jforum.JForumSecurityService"/></property>
+	</bean>
+
+	<bean id="org.etudes.coursemap.plugin.SyllabusItemProvider"
+			class="org.etudes.coursemap.plugin.SyllabusItemProvider"
+			init-method="init"
+			destroy-method="destroy"
+			singleton="true">
+
+		<property name="courseMapService"><ref bean="org.etudes.coursemap.api.CourseMapService"/></property>
+		<property name="siteService"><ref bean="org.sakaiproject.site.api.SiteService"/></property>
+		<property name="syllabusManager"><ref bean="org.sakaiproject.api.app.syllabus.SyllabusManager"/></property>
+	</bean>
+
+</beans>

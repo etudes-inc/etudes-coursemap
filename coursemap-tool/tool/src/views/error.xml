@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- !DOCTYPE interface SYSTEM "http://source.sakaiproject.org/ambrosia/ambrosia.dtd" -->
+
+<!--
+/**********************************************************************************
+ * $URL: https://source.etudes.org/svn/apps/coursemap/trunk/coursemap-tool/tool/src/views/error.xml $
+ * $Id: error.xml 1539 2011-05-28 22:44:25Z ggolden $
+ ***********************************************************************************
+ *
+ * Copyright (c) 2011 Etudes, Inc.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ **********************************************************************************/
+-->
+
+<interface title="error-title" header="error-header">
+	<container>
+		<section>
+			<container>
+				<alert selector="error-unauthorized" />
+			</container>
+			<included>
+				<decision type="hasValue">
+					<model ref="unauthorized" />
+				</decision>
+			</included>
+		</section>
+	</container>
+</interface>
